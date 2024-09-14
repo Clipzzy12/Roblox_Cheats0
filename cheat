@@ -725,77 +725,50 @@ local MiscTab = Window:CreateTab("Misc", nil) -- Title, Image
 local MiscSection = MiscTab:CreateSection("Main")
 
 local Button = MiscTab:CreateButton({
-   Name = "Wall Hacks",
-getgenv().WallHack.Visuals = {
-    ESPSettings = {
-        Enabled = true,
-        TextColor = "20, 90, 255",
-        TextSize = 14,
-        Center = true,
-        Outline = true,
-        OutlineColor = "0, 0, 0",
-        TextTransparency = 0.7,
-        TextFont = Drawing.Fonts.Monospace, -- UI, System, Plex, Monospace
-        DisplayDistance = true,
-        DisplayHealth = true,
-        DisplayName = true
-    },
+   Name = "Kill All",
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local Typing = false
+local KillAllKey = Enum.KeyCode.E
 
-    TracersSettings = {
-        Enabled = true,
-        Type = 1, -- 1 - Bottom; 2 - Center; 3 - Mouse
-        Transparency = 0.7,
-        Thickness = 1,
-        Color = "50, 120, 255"
-    },
+UserInputService.TextBoxFocused:Connect(function()
+    Typing = true
+end)
 
-    BoxSettings = {
-        Enabled = true,
-        Type = 1; -- 1 - 3D; 2 - 2D;
-        Color = "50, 120, 255",
-        Transparency = 0.7,
-        Thickness = 1,
-        Filled = false, -- For 2D
-        Increase = 1
-    },
+UserInputService.TextBoxFocusReleased:Connect(function()
+    Typing = false
+end)
 
-    HeadDotSettings = {
-        Enabled = true,
-        Color = "50, 120, 255",
-        Transparency = 0.5,
-        Thickness = 1,
-        Filled = true,
-        Sides = 30,
-        Size = 2
-    }
-}
+UserInputService.InputBegan:Connect(function(Input)
+	if Input.KeyCode == KillAllKey and Typing == false then
+		for _, v in next, Players:GetPlayers() do
+			if v.Name ~= Players.LocalPlayer.Name then
+				if v.TeamColor ~= Players.LocalPlayer.TeamColor then
+					if v.Character ~= nil and v.Character.Humanoid.Health ~= 0 then
+						local Arguments = {
+							PartHit = workspace[v.Name].HeadHB, -- Part that the bullet hit.
+							HitPos = workspace[v.Name].HeadHB.Position, -- 3D Position of where the bullet hit.
+							WeaponName = "AWP", -- Change to a weapon (must be valid) if you want. I use AWP because it deals the most damage.
+							Number = 4096,
+							GunInstance = nil,
+							Nothing = nil,
+							Nothing2 = nil,
+							Number2 = 1,
+							Boolean = false,
+							Headshot = true, -- Whether or not the shot was a headshot.
+							VectorPosition = Vector3.new(0, 0, 0), -- Where the bullet comes from.
+							Number3 = 41022,
+							Normal = Vector3.new(0, 0, 0) -- The bullet mark's orientation (Third argument of a raycast).
+						}
 
-getgenv().WallHack.Crosshair = {
-    CrosshairSettings = {
-        Enabled = true,
-        Type = 1, -- 1 - Mouse; 2 - Center
-        Size = 12,
-        Thickness = 1,
-        Color = "0, 255, 0",
-        Transparency = 1,
-        GapSize = 5,
-        CenterDot = false,
-        CenterDotColor = "0, 255, 0",
-        CenterDotSize = 1,
-        CenterDotTransparency = 1,
-        CenterDotFilled = true
-    },
-    
-    Parts = {}
-}
-
-getgenv().WallHack.Settings = {
-    SendNotifications = true,
-    SaveSettings = true, -- Re-execute upon changing
-    ReloadOnTeleport = true,
-    Enabled = true,
-    TeamCheck = false,
-    AliveCheck = true
-
+						for i = 1, 5 do
+							game:GetService("ReplicatedStorage").Events.HitPart:FireServer(unpack(Arguments))
+						end
+					end
+				end
+			end
+		end
+	end
+end)
    end,
 })
