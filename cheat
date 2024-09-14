@@ -796,7 +796,6 @@ getgenv().WallHack.Settings = {
     Enabled = true,
     TeamCheck = false,
     AliveCheck = true
-}
 
    end,
 })
