@@ -726,5 +726,6 @@ local MiscSection = MiscTab:CreateSection("Main")
 
 local Button = MiscTab:CreateButton({
    Name = "Kill All",
+   Callback = function()
    end,
 })
